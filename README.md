@@ -27,7 +27,7 @@ uHTTPd is running on port 80 on my device, configured with /www as the webroot. 
 
 ### Gotchas
 
-The TP-LINK TL-MR3040 is a small device, and as such, has a very small amount of space for the OpenWRT system.  To combat this, I utilized the onboard USB port to hold a low-profile SanDisk Cruzer 16GB drive.  The drive is formatted Ext4, and configured to be an extroot device for the system (this essentially makes it overlay the rootfs of the system and trick it into thinking it has way more space than it really does, but really it's just writing stuff to the USB drive, not the ROM).  
+The TP-LINK TL-MR3040 is a small device, and as such, has a very small amount of space for the OpenWRT system.  To combat this, I utilized the onboard USB port to hold a low-profile SanDisk Cruzer 16GB drive.  The drive is formatted Ext4, and configured to be an extroot device for the system (this essentially makes it overlay the rootfs of the system and trick it into thinking it has way more space than it really does, but really it's just writing stuff to the USB drive, not the onboard flash).  
 
 I found to get the device to mount and recognize an Ext4-formatted USB drive, it did not have enough space to install the required packages with the firmware build available on the official OpenWRT page I linked above.  Therefore, I had to build my own version of OpenWRT without all the extra packages (like LuCI, the web GUI), so that I had the space to install the necessary packages.  I didn't end up installed LuCI once I had the extra space from the USB drive, because I find it way easier to just do it via CLI, and cut down on the bloat.  This device isn't anything special in terms of processing power and memory.
 
