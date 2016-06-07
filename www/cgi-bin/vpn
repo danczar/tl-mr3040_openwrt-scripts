@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# just in case we need another way to reset OpenVPN
+
+echo "Content-type: text/html"
+echo
+echo "<p align=\"center\"><br>Travel Router</b><br/>"
+echo "Restarting OpenVPN...</p>"
+
+/etc/reset_openvpn
+

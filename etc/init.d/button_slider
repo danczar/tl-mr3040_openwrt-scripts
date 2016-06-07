@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+
+START=19
+boot() {
+	if grep -qe "sw2.*in  hi" /sys/kernel/debug/gpio; then
+		if grep -qe "sw1.*in  hi" /sys/kernel/debug/gpio; then
+			# Wireless AP mode
+			logger "boot: WIRELESS AP MODE SET"
+			/etc/button_wired_wan.sh
+		else
+			# Wireless Bridge (WiFi WAN) mode
+			logger "boot: WIRELESS BRIDGE MODE SET"
+			/etc/button_wifi_wan.sh
+		fi
+	else
+		# WISP
+		logger "boot: DEFUNCT BUTTON POSITION"
+		
+	fi
+}
+

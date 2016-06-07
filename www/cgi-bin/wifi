@@ -1,0 +1,58 @@
+#!/bin/sh
+
+echo "Content-type: text/html"
+echo
+
+echo "<p align=\"center\"><b>Travel Router</b><br/>"
+
+AP_MODE=$(cat /etc/ap_mode)
+
+if [ $AP_MODE == 1 ]; then
+	echo "Router is in AP mode. Function disabled.<br/>"
+	exit 1
+fi
+
+read SSID_STRING
+read PW_STRING
+
+NEW_SSID=$(echo $SSID_STRING | awk -F '=' '{print $2}')
+NEW_PW=$(echo $PW_STRING | awk -F '=' '{print $2}')
+
+NEW_SSID=$(echo ${NEW_SSID%?})
+
+echo $NEW_PW
+
+if [ ! -z "$NEW_PW" ]; then
+	echo "Setting up WPA key...<br/>"
+	ENCRYPTION="psk-mixed+tkip+ccmp"
+else
+	echo "No key specified...<br/>"
+	ENCRYPTION="none"
+fi
+
+cat > /www/cgi-bin/tmp_config << EOL
+config wifi-device 'radio0'
+        option type 'mac80211'
+        option channel 'auto'
+        option hwmode '11g'
+        option path 'platform/ar933x_wmac'
+        option htmode 'HT20'
+        option country 'US'
+
+config wifi-iface
+        option device 'radio0'
+        option network 'WAN'
+        option mode 'sta'
+        option ssid '$NEW_SSID'
+        option encryption '$ENCRYPTION'
+        option key '$NEW_PW'
+EOL
+
+echo "<br/>New wifi configuration set to \"$NEW_SSID\"<br/>"
+
+cp /www/cgi-bin/tmp_config /etc/config/wireless
+
+/etc/init.d/network restart
+
+/etc/reset_openvpn
+

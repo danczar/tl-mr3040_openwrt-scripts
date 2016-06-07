@@ -1,0 +1,5 @@
+#!/bin/sh
+
+killall openvpn
+openvpn --daemon --cd /etc/openvpn --config /etc/openvpn/default.ovpn
+

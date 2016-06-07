@@ -1,0 +1,28 @@
+#!/bin/sh
+
+sleep 1
+
+#logger "$BUTTON -- $ACTION"
+
+if [ $ACTION == "released" ]; then
+        if [ $BUTTON == "BTN_1" ]; then
+                logger "Switch set to trigger VPN restart"
+		/etc/reset_openvpn
+
+        elif [ $BUTTON == "BTN_0" ] && grep -qe "sw1.*in  lo" /sys/kernel/debug/gpio; then
+		if [ $(cat /etc/ap_mode) -eq 1 ]; then
+	                logger "Switch set to Wireless Bridge mode"
+			/etc/button_wifi_wan.sh
+		fi
+        fi
+else
+        if grep -qe "sw1.*in  hi" /sys/kernel/debug/gpio; then
+                if grep -qe "sw2.*in  hi" /sys/kernel/debug/gpio; then
+			if [ $(cat /etc/ap_mode) -eq 0 ]; then
+	                        logger "Switch set to Wireless AP mode"
+				/etc/button_wired_wan.sh
+			fi
+                fi
+	fi
+fi
+
