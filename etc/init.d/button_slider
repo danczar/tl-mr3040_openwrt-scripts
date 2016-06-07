@@ -17,5 +17,8 @@ boot() {
 		logger "boot: DEFUNCT BUTTON POSITION"
 		
 	fi
+
+	# start up OpenVPN at boot once it's configured the network
+	/etc/reset_openvpn
 }
 
